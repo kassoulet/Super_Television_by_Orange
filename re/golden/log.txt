@@ -1,0 +1,77 @@
+effect 0 music_t=0.01 order=0 row=0 wall=0
+ shot m000 fx0 order 0 row 16 brightness 27.3
+ shot m004 fx0 order 0 row 33 brightness 67.9
+ shot m008 fx0 order 0 row 54 brightness 96.3
+ shot m012 fx0 order 1 row 1 brightness 226.3
+ shot m016 fx0 order 1 row 33 brightness 106.8
+ shot m020 fx0 order 2 row 12 brightness 113.0
+ shot m024 fx0 order 2 row 40 brightness 91.5
+ shot m028 fx0 order 3 row 21 brightness 89.8
+ shot m032 fx0 order 3 row 61 brightness 103.0
+ shot m036 fx0 order 5 row 2 brightness 156.2
+ shot m040 fx0 order 5 row 21 brightness 99.0
+ shot m044 fx0 order 6 row 1 brightness 181.2
+ shot m048 fx0 order 7 row 2 brightness 146.1
+ shot m052 fx0 order 7 row 4 brightness 135.9
+ shot m056 fx0 order 8 row 3 brightness 96.5
+effect 1 music_t=60.12 order=8 row=20 wall=72
+ shot m060 fx1 order 8 row 43 brightness 86.2
+ shot m064 fx1 order 9 row 28 brightness 89.8
+ shot m068 fx1 order 9 row 56 brightness 89.3
+ shot m072 fx1 order 10 row 21 brightness 87.0
+effect 2 music_t=76.04 order=10 row=54 wall=90
+ shot m076 fx2 order 11 row 9 brightness 29.2
+ shot m080 fx2 order 11 row 60 brightness 29.1
+ shot m084 fx2 order 12 row 33 brightness 28.9
+effect 3 music_t=89.71 order=13 row=0 wall=102
+ shot m088 fx3 order 13 row 11 brightness 85.8
+ shot m092 fx3 order 13 row 29 brightness 198.4
+ shot m096 fx3 order 14 row 36 brightness 134.9
+effect 4 music_t=102.31 order=15 row=0 wall=121
+ shot m100 fx3 order 14 row 42 brightness 128.5
+ shot m104 fx4 order 15 row 57 brightness 126.2
+ shot m108 fx4 order 16 row 14 brightness 153.8
+effect 5 music_t=115.11 order=17 row=1 wall=134
+ shot m112 fx4 order 16 row 38 brightness 132.6
+ shot m116 fx5 order 17 row 41 brightness 52.4
+ shot m120 fx5 order 18 row 21 brightness 51.4
+ shot m124 fx5 order 18 row 34 brightness 69.8
+ shot m128 fx5 order 19 row 41 brightness 54.9
+ shot m132 fx5 order 19 row 47 brightness 44.8
+ shot m136 fx5 order 20 row 37 brightness 52.1
+ shot m140 fx5 order 21 row 4 brightness 95.6
+effect 6 music_t=144.35 order=21 row=42 wall=176
+ shot m144 fx6 order 22 row 3 brightness 66.1
+ shot m148 fx6 order 22 row 21 brightness 66.1
+effect 7 music_t=152.83 order=23 row=0 wall=180
+ shot m152 fx7 order 23 row 5 brightness 140.4
+effect 3 music_t=159.17 order=24 row=0 wall=182
+ shot m156 fx7 order 23 row 44 brightness 140.4
+ shot m160 fx3 order 24 row 29 brightness 119.7
+ shot m164 fx3 order 24 row 53 brightness 153.5
+ shot m168 fx3 order 25 row 30 brightness 138.9
+effect 9 music_t=174.93 order=26 row=32 wall=203
+ shot m172 fx3 order 26 row 4 brightness 89.7
+ shot m176 fx9 order 27 row 19 brightness 12.8
+ shot m180 fx9 order 28 row 13 brightness 13.0
+ shot m184 fx9 order 29 row 4 brightness 12.9
+ shot m188 fx9 order 29 row 20 brightness 13.2
+ shot m192 fx9 order 29 row 42 brightness 12.8
+ shot m196 fx9 order 30 row 16 brightness 12.1
+effect 10 music_t=201.70 order=31 row=0 wall=273
+ shot m200 fx10 order 31 row 21 brightness 28.2
+ shot m204 fx10 order 31 row 35 brightness 49.7
+ shot m208 fx10 order 32 row 4 brightness 49.6
+ shot m212 fx10 order 32 row 38 brightness 49.6
+ shot m216 fx10 order 33 row 7 brightness 49.3
+ shot m220 fx10 order 34 row 10 brightness 49.4
+ shot m224 fx10 order 34 row 12 brightness 48.8
+effect 11 music_t=230.04 order=35 row=1 wall=306
+ shot m228 fx11 order 35 row 6 brightness 84.8
+ shot m232 fx11 order 35 row 20 brightness 84.8
+ shot m236 fx11 order 36 row 14 brightness 87.6
+ shot m240 fx11 order 36 row 62 brightness 93.3
+effect 12 music_t=244.08 order=37 row=0 wall=322
+ shot m244 fx12 order 37 row 25 brightness 91.5
+end irqs 16695
+assets (chunk,dest) per effect {0: [(16, '0x20286000'), (3, '0x2041c000'), (4, '0x2040c304'), (0, '0x20490000'), (1, '0x204b0000')], 1: [(8, '0x20500000'), (4, '0x204e0004'), (9, '0x204c6004')], 2: [(6, '0x20540000'), (7, '0x20560000'), (2, '0x20571000')], 3: [(13, '0x205d1000'), (22, '0x206637c0'), (23, '0x20877000'), (22, '0x209097c0')], 4: [(14, '0x206bfa00'), (15, '0x20674000')], 5: [(5, '0x20742004'), (11, '0x20790000'), (10, '0x207afcf6'), (17, '0x2082fcf6'), (21, '0x20847000')], 6: [(24, '0x20857000')], 7: [(25, '0x20867000')], 9: [(18, '0x2091de80')], 10: [(19, '0x2096fcf6'), (20, '0x2099fcf6')], 11: [(20, '0x209c8000'), (27, '0x209d8000')], 12: [(26, '0x20a46000')]}
