@@ -23,7 +23,7 @@ await ev('document.getElementById("pp").click()');await wait(2000);const p1=awai
 await ev('document.getElementById("pp").click()');
 // per-effect: seek in, canvas non-empty, size
 const px=()=>ev('(()=>{const c=document.getElementById("c"),d=c.getContext("2d").getImageData(0,0,c.width,c.height).data;let n=0;for(let i=0;i<d.length;i+=4)if(d[i]|d[i+1]|d[i+2])n++;return [c.width,c.height,n]})()');
-for(const [t,name] of [[65,'fx01'],[82,'fx02'],[95,'fx03'],[108,'fx04'],[125,'fx05'],[148,'fx06'],[153.1,'fx07'],[165,'fx08'],[185,'fx09'],[215,'fx10'],[236,'fx11'],[246,'fx12']]){await ev(`stv.seek(${t})`);await wait(1500);const [w,h,n]=await px();ok(name+` at ${t}s renders`,n>1000,`${w}x${h} nonblack=${n}`);
+for(const [t,name] of [[10,'fx00'],[40,'fx00 late'],[65,'fx01'],[82,'fx02'],[95,'fx03'],[108,'fx04'],[125,'fx05'],[148,'fx06'],[153.1,'fx07'],[165,'fx08'],[185,'fx09'],[215,'fx10'],[236,'fx11'],[246,'fx12']]){await ev(`stv.seek(${t})`);await wait(1500);const [w,h,n]=await px();ok(name+` at ${t}s renders`,n>1000,`${w}x${h} nonblack=${n}`);
   if(name==='fx09')ok('fx09 canvas 320x400 shown in the same 4:3 box',h===400&&Math.abs((await ev('(()=>{const r=document.getElementById("c").getBoundingClientRect();return r.width/r.height})()'))-4/3)<0.02);}
 // seek back is deterministic for the stateful effect: same frame twice
 await ev('stv.seek(190)');await wait(500);const h1=await ev('(()=>{const c=document.getElementById("c");return Array.from(c.getContext("2d").getImageData(0,0,320,400).data.slice(0,4000)).join()})()');
