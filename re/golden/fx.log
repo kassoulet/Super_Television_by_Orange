@@ -1,0 +1,11 @@
+OPEN data.dat True
+EFFECT 0 0x45a30 start t=0.00
+SETMODE 0x13 t=1.51
+SETMODE 0x13 t=1.51
+ shot e0 t+3 320x200
+ shot e0 t+6 320x200
+ shot e0 t+9 320x200
+ shot e0 t+12 320x200
+ cut effect 0 irqs 839 assets [16, 3, 4, 0, 1]
+EFFECT 1 0x4705f start t=12.00
+ shot e1 t+1 320x200
