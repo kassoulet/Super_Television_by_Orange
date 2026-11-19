@@ -8,3 +8,11 @@ Show 4:3 (effect 9 is a 320x400 mode, `ctx.h = 400`; the canvas box stays 4:3), 
 
 
 Harness clock: with the exact per-tick music row (re/fx_oracle.py IRQLOG, tools/irqlog2bin.py) the flash/fade values of fx3, fx5, fx8 match the oracle on every snapshot (0 wrong); the earlier 'music-driven mismatches' were a checker artifact. Original music clock (derived from 0x3d980/0x3dde9, re/NOTES.md 'Original player clock'): the original is sound-card driven, tick = ((rate<<8)*5/tempo)>>1 samples with 8.8 carry, i.e. 2.5/tempo s; this equals the S3M walker model within 0.7 ms on all 2400 rows at any mixing rate. libopenmpt truncates samples per tick and runs up to 0.1375 s ahead at the end (0.55 per mille, <= 22 ms inside a 40 s effect); the timeline stays on libopenmpt times so visuals stay locked to the rows of the audio actually played. The phase between the 70 Hz PIT (effect ISRs) and the sound-card clock is machine dependent: fx3 NINIT, fx8 EXIT, fx4 NINIT/TPF and fx5 pace stay harness measurements (UNRESOLVED, not derivable).
+
+## Write-ups on the site
+
+The write-ups are published as HTML next to the player (`web/writeups/`, generated from `WRITEUP-*.md` and the referenced `figures/`; needs pandoc). After editing a write-up, regenerate with:
+
+```
+../tools/mkwriteups.sh . web    # shared script: demoports/tools/mkwriteups.sh REPO_DIR PUBLISH_SUBDIR
+```

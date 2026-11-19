@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>SUPER TELEVISION (Orange, 1996) - asm snippets worth
+reading</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+  :root{--bg:#fff;--fg:#1d1d22;--mut:#666;--ac:#c4155a;--code:#f3f3f6;--bd:#d8d8e0}
+  @media (prefers-color-scheme:dark){:root{--bg:#0b0b10;--fg:#d8d8e0;--mut:#9a9aa8;--ac:#ff6a9a;--code:#17171f;--bd:#33333f}}
+  *{box-sizing:border-box}
+  body{margin:0 auto;max-width:62rem;padding:0 16px;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,sans-serif}
+  #wunav{display:flex;gap:16px;flex-wrap:wrap;padding-top:12px;padding-bottom:8px;border-bottom:1px solid var(--bd);font-size:14px}
+  a{color:var(--ac)}
+  h1,h2,h3,h4{line-height:1.25;margin-top:1.8em}
+  img{max-width:100%;height:auto;image-rendering:auto}
+  pre{background:var(--code);border:1px solid var(--bd);border-radius:4px;padding:10px 12px;overflow-x:auto;font-size:13px;line-height:1.4}
+  code{background:var(--code);padding:1px 4px;border-radius:3px;font-size:.92em;overflow-wrap:anywhere}
+  pre code{background:none;padding:0;overflow-wrap:normal}
+  table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%}
+  td,th{border:1px solid var(--bd);padding:4px 8px}
+  blockquote{border-left:3px solid var(--bd);margin-left:0;padding-left:14px;color:var(--mut)}
+  #TOC{font-size:14px}#TOC ul{padding-left:1.2em}
+  #TOC>ul{padding-left:0;list-style:none}
+  details#toc-box{margin:12px 0}
+  </style>
+</head>
+<body>
+<nav id="wunav"><a href="../index.html">&larr; the demo</a> <a href="WRITEUP-asm.html">asm</a> <a href="WRITEUP-effects.html">effects</a> <a href="https://github.com/kassoulet/Super_Television_by_Orange">README on GitHub</a></nav>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#super-television-orange-1996---asm-snippets-worth-reading"
+id="toc-super-television-orange-1996---asm-snippets-worth-reading">SUPER
+TELEVISION (Orange, 1996) - asm snippets worth reading</a>
+<ul>
+<li><a href="#1-table-lookup-by-16-bit-wraparound-fx1-0x46d53"
+id="toc-1-table-lookup-by-16-bit-wraparound-fx1-0x46d53">1. Table lookup
+by 16-bit wraparound (fx1, 0x46d53)</a></li>
+<li><a
+href="#2-replacing-half-a-pointer-with-a-byte-the-lens-fx2-0x476260x4768e"
+id="toc-2-replacing-half-a-pointer-with-a-byte-the-lens-fx2-0x476260x4768e">2.
+Replacing half a pointer with a byte: the lens (fx2,
+0x47626..0x4768e)</a></li>
+<li><a
+href="#3-four-pixels-per-dword-with-16-bit-pointer-registers-for-the-wrap-fx5-0x4971f0x49777"
+id="toc-3-four-pixels-per-dword-with-16-bit-pointer-registers-for-the-wrap-fx5-0x4971f0x49777">3.
+Four pixels per dword, with 16-bit pointer registers for the wrap (fx5,
+0x4971f..0x49777)</a></li>
+<li><a
+href="#4-swar-feedback-and-a-free-palette-index-fx4-0x4914a0x49177"
+id="toc-4-swar-feedback-and-a-free-palette-index-fx4-0x4914a0x49177">4.
+SWAR feedback and a free palette index (fx4, 0x4914a..0x49177)</a></li>
+<li><a
+href="#5-the-bump-gradient-as-a-table-of-dword-offsets-fx10-0x4a50d0x4a533-and-0x4a4b40x4a4c5"
+id="toc-5-the-bump-gradient-as-a-table-of-dword-offsets-fx10-0x4a50d0x4a533-and-0x4a4b40x4a4c5">5.
+The bump gradient as a table of dword offsets (fx10, 0x4a50d..0x4a533
+and 0x4a4b4..0x4a4c5)</a></li>
+<li><a
+href="#5b-fx11---the-whole-transparency-test-is-a-compare-and-a-skip-0x47e31"
+id="toc-5b-fx11---the-whole-transparency-test-is-a-compare-and-a-skip-0x47e31">5b.
+fx11 - the whole transparency test is a compare and a skip
+(0x47e31)</a></li>
+<li><a
+href="#6-the-screen-as-the-state-vram-read-back-through-a-16-bit-table-fx9-0x49fce0x4a0a0"
+id="toc-6-the-screen-as-the-state-vram-read-back-through-a-16-bit-table-fx9-0x49fce0x4a0a0">6.
+The screen as the state: VRAM read-back through a 16-bit table (fx9,
+0x49fce..0x4a0a0)</a></li>
+<li><a
+href="#7-8x8-bilinear-patches-drawn-with-vga-plane-masks-fx3-0x48e0e-fx0-0x4679a"
+id="toc-7-8x8-bilinear-patches-drawn-with-vga-plane-masks-fx3-0x48e0e-fx0-0x4679a">7.
+8x8 bilinear patches drawn with VGA plane masks (fx3 0x48e0e, fx0
+0x4679a)</a></li>
+<li><a
+href="#8-a-3-instruction-hash-as-the-noise-generator-and-a-crossfade-by-imulsar-11-fx0-0x466200x4668f"
+id="toc-8-a-3-instruction-hash-as-the-noise-generator-and-a-crossfade-by-imulsar-11-fx0-0x466200x4668f">8.
+A 3-instruction hash as the noise generator, and a crossfade by
+<code>imul</code>/<code>sar 11</code> (fx0, 0x46620..0x4668f)</a></li>
+<li><a
+href="#9-separable-warp-one-add-per-pixel-fx0-0x45136-and-0x452ee"
+id="toc-9-separable-warp-one-add-per-pixel-fx0-0x45136-and-0x452ee">9.
+Separable warp: one add per pixel (fx0, 0x45136 and 0x452ee)</a></li>
+<li><a
+href="#10-vga-register-work-mode-x-vsync-dac-page-flip-helpers-0x49e9e0x49f43-0x4a317"
+id="toc-10-vga-register-work-mode-x-vsync-dac-page-flip-helpers-0x49e9e0x49f43-0x4a317">10.
+VGA register work: mode X, vsync, DAC, page flip (helpers
+0x49e9e..0x49f43, 0x4a317)</a></li>
+<li><a
+href="#11-palette-fades-as-an-integer-multiply-with-a-clamp-all-effects-fx6-0x4818e"
+id="toc-11-palette-fades-as-an-integer-multiply-with-a-clamp-all-effects-fx6-0x4818e">11.
+Palette fades as an integer multiply with a clamp (all effects; fx6
+0x4818e)</a></li>
+<li><a
+href="#12-the-clocks-a-pit-divisor-for-the-effects-a-fractional-sample-tick-for-the-music"
+id="toc-12-the-clocks-a-pit-divisor-for-the-effects-a-fractional-sample-tick-for-the-music">12.
+The clocks: a PIT divisor for the effects, a fractional-sample tick for
+the music</a></li>
+<li><a href="#13-per-effect-isr-swap"
+id="toc-13-per-effect-isr-swap">13. Per-effect ISR swap</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="super-television-orange-1996---asm-snippets-worth-reading">SUPER
+TELEVISION (Orange, 1996) - asm snippets worth reading</h1>
+<p>All addresses are linear addresses of the unpacked program
+(<code>DEMO.EXE</code> = PMODE/W 1.20 stub + Watcom C 32-bit flat model;
+the guest memory is dumped by <code>re/unpack_pmodew.py</code>,
+<code>re/low.bin</code> = linear 0x10000.., code at 0x3a000..). Every
+listing was produced with
+<code>objdump -D -b binary -m i386 -M intel --adjust-vma=0x10000 re/low.bin</code>
+(capstone is not installed here, so objdump stands in; same decoder
+role) and the addresses match the hooks used with the Unicorn oracle
+(<code>re/fx_oracle.py</code>). Watcom convention: arguments in EAX,
+EDX, EBX, ECX.</p>
+<p>The code is a 486/Pentium-era mode X demo: no MMX, no SSE, no x87 in
+the effects listed; integer tables and 16-bit register tricks. In the
+effect routines examined I found <strong>no self-modifying code</strong>
+(all stores to the code segment I saw, <code>cs:</code> prefixed, are in
+the extender/loader area below 0x11000); the tricks are about table
+layout, register halves, SWAR and VGA registers. (The runs of
+<code>nop</code> after conditional jumps, e.g. at 0x47e38 or 0x4a018,
+are compiler alignment padding.)</p>
+<hr />
+<h2 id="1-table-lookup-by-16-bit-wraparound-fx1-0x46d53">1. Table lookup
+by 16-bit wraparound (fx1, 0x46d53)</h2>
+<pre><code>46d53: mov cl,0x64              ; 100 rows
+46d59: mov eax,[0x56254]        ; table base, 64 KB aligned: ax is now free
+46d5e: mov ch,0x40              ; 64 pixels per row per plane
+46d60: cmp byte [ebp+0],0       ; background mask: skip if not 0
+46d64: jne 0x46d88
+46d66: mov ax,[esi]             ; the &quot;map&quot; word of this pixel
+46d69: mov dl,ah                ; edx/ebx are 0 above: byte -&gt; index
+46d6b: mov bl,al
+46d6d: add ax,[0x554f0]         ; + global sine offset
+46d74: add ax,[edx*2+0x562b5]   ; + T1[map&gt;&gt;8]
+46d7c: add ax,[ebx*2+0x564b5]   ; + T2[map&amp;255]
+46d84: mov al,[eax]             ; colour = TBL[(sum) &amp; 0xffff]
+46d86: mov [edi],al</code></pre>
+<p>Why it is clever: <code>eax</code> holds an aligned 64 KB table
+pointer, so <strong><code>ax</code> is the 16-bit offset</strong>. Three
+16-bit adds accumulate the displacement and the carry out of bit 15 is
+simply lost: the lookup wraps inside the table with no <code>and</code>.
+The two 256-word tables are indexed by the two bytes of the same word
+(<code>dl=ah</code>, <code>bl=al</code> with
+<code>xor edx,edx / xor ebx,ebx</code> hoisted at 0x46d55), so the
+per-pixel work is 4 loads + 3 adds, no multiply. <code>esi += 8</code>,
+<code>ebp += 4</code>, <code>edi += 1</code> per iteration: the source
+is read at stride 8 because mode X plane p only holds x%4 == p, and the
+routine is called 4 times (<code>0x46da9</code>) with
+<code>out 0x3c4</code> plane masks 8, 4, 2, 1 between calls. Port:
+<code>half()</code> in <code>web/fx/fx01.js</code>.</p>
+<h2
+id="2-replacing-half-a-pointer-with-a-byte-the-lens-fx2-0x476260x4768e">2.
+Replacing half a pointer with a byte: the lens (fx2,
+0x47626..0x4768e)</h2>
+<pre><code>47672: xor bh,bh
+47674: mov al,[esi]             ; texture window 1
+47676: add al,[ebp+0]           ; + window 2   (al = t1+t2, mod 256)
+47679: mov ah,[0x5ca7e]         ; row counter 0x1c+y
+4767f: mov dh,[eax]             ; dh = LENS[row][al]
+47681: mov ah,ch                ; ah = x
+47683: mov dl,[eax]             ; dl = LENS[x][al]
+47685: mov bl,[edx]             ; bl = PICTURE[dh:dl]
+47687: mov bh,al
+47689: shr bh,2
+4768c: mov al,[ebx]             ; out = SHADE[(al&gt;&gt;2):bl]
+4768e: mov [edi],al</code></pre>
+<p><code>eax</code>, <code>edx</code> and <code>ebx</code> each carry a
+64 KB-aligned base (the loader aligns them:
+<code>or eax,0xffff / inc eax</code> at 0x4770a, 0x476bf, 0x47725, and
+chunk 6 is copied to such an address), and the code only ever overwrites
+the <strong>low 16 bits with two byte moves</strong>.
+<code>mov dh,[eax] / mov dl,[eax]</code> builds a 2D coordinate pair
+<code>(dh,dl)</code> directly as a 16-bit index with no
+<code>shl/or</code>; <code>al</code> is at the same time the
+<em>data</em> of the previous step and the <em>address low byte</em> of
+the next, a three-level dependent lookup in 10 instructions. The lens
+table is generated by a tiny loop (0x476dd..0x476f9):</p>
+<pre><code>476e4: mov eax,ebx / imul eax,edx / sar eax,8 / add al,0x80 / mov [edi],al   ; ((row-128)*(256-col)&gt;&gt;8)+0x80
+476f1: dec edx  (col 256..1)   476f6: inc ebx (row -128..127)</code></pre>
+<p>Because the pair is a raw offset into the <strong>file image of chunk
+6</strong> (header and palette included), the port indexes the whole
+file (<code>C6[(dh&lt;&lt;8)+dl]</code>) to stay exact.</p>
+<h2
+id="3-four-pixels-per-dword-with-16-bit-pointer-registers-for-the-wrap-fx5-0x4971f0x49777">3.
+Four pixels per dword, with 16-bit pointer registers for the wrap (fx5,
+0x4971f..0x49777)</h2>
+<pre><code>49738: dec si                   ; left   (16-bit ops: wrap inside the 64K block)
+4973a: inc bx                   ; right
+4973c: add bp,0x100             ; down
+49741: sub dx,0x100             ; up
+49751: mov eax,[esi]
+49753: add eax,[ebx]
+49755: add eax,[ebp+0]
+49758: add eax,[edx]
+4975a: shr eax,2
+4975d: and eax,0x3f3f3f3f
+49762: mov [edi],eax            ; 4 blurred heights at once
+49764: add si,4 / add bx,4 / add bp,4 / add dx,4</code></pre>
+<p>The box blur of the height map processes <strong>4 neighbours x 4
+pixels with one dword add each</strong>: since the heights are &lt; 64,
+the sum of four bytes never carries into the next byte (max 4*63 = 252),
+<code>shr 2</code> moves bits from byte k+1 into byte k and the
+<code>&amp; 0x3f3f3f3f</code> removes them. Neighbour pointers are kept
+as <code>esi/ebx/ebp/edx</code> whose <strong>low halves are stepped
+with 16-bit instructions</strong> (<code>add si,4</code>), so the image
+edge wraps inside its 64 KB block for free. The known cost: the dword
+reads at offsets 0xffff/0xfffd run 3/1 bytes past the block (the port
+uses zeros there, UNRESOLVED on real hardware). The same block is reused
+4 times by swapping the two buffers (<code>xchg [0x60778],eax</code> at
+0x4977f). The slope table that follows (0x497b7) is a
+2-instruction-per-axis trick: <code>sub al,[ebx]</code> and
+<code>sub ah,[ebp]</code> leave the two signed differences in the two
+halves of <code>ax</code>, <code>shl al,2 / shl ah,2</code>, one word
+store: <strong>a 2D vector in 16 bits</strong>. The per-frame inner loop
+(0x49590) uses it:</p>
+<pre><code>49590: mov dx,[esi]             ; w  (screen-&gt;uv word, edx high = chunk10 base)
+49593: mov bp,dx
+49596: add dx,[0x60ffc]         ; + OFF  (16-bit: wrap)
+4959d: movzx ebx,dx / shl ebx,1
+495a2: mov cl,[edx]             ; texture colour
+495a4: add ebx,[0x609ee]        ; D table (words)
+495aa: add bp,[ebx]             ; w + slope   (both axes in one add)
+495ad: mov ch,[ebp+0]           ; light-map shade
+495b0: mov al,[ecx]             ; SHADE[ch:cl]
+495b2: mov [edi],al</code></pre>
+<p>One bump-mapped pixel = 11 instructions with no multiply: the
+<strong>u,v coordinate packed in one 16-bit word</strong> is displaced
+by a packed slope with a single <code>add bp</code>.</p>
+<h2 id="4-swar-feedback-and-a-free-palette-index-fx4-0x4914a0x49177">4.
+SWAR feedback and a free palette index (fx4, 0x4914a..0x49177)</h2>
+<pre><code>4914a: mov eax,[esi]            ; D: 4 displaced pixels
+4914c: lea eax,[eax+eax*2]      ; 3*D
+4914f: add eax,[ebx]            ; + C (constant picture)
+49151: shr eax,2
+49154: and eax,0x3f3f3f3f       ; (3D+C)/4 per byte -&gt; new feedback T
+49159: mov [ebp+0],eax
+4915c: shr eax,2
+4915f: and eax,0x0f0f0f0f       ; level -&gt; low nibble
+49164: or  eax,[edx]            ; | (logo pixel &lt;&lt; 4), prepared once
+49166: mov [edi],eax            ; 4 VRAM pixels</code></pre>
+<p><code>lea [eax+eax*2]</code> is the cheap x3. The same value gives
+the recursion state (6 bits) and, shifted again, the 4-bit brightness
+that is ORed with a <strong>pre-shifted</strong> copy of the other
+picture (chunk 15 is <code>&lt;&lt; 4</code> at load, see the port's
+<code>O=...map(v=&gt;v&lt;&lt;4)</code>). The palette is then built as a
+16x16 table (<code>0x4931f</code>), so no per-pixel colour arithmetic is
+needed. The 3/4-1/4 mix means an error decays by 3/4 per frame (why the
+port must replay from the first frame). The distortion read before it
+(0x49106..0x49114) builds two bytes into <code>ax</code> from two table
+lookups and stores them with one <code>mov [edi],ax</code>:
+<code>edx = [ebp]+ebx</code> (X offset + row offset),
+<code>al=[edx]</code>, then <code>[ebp+4]</code> for the next pixel.</p>
+<h2
+id="5-the-bump-gradient-as-a-table-of-dword-offsets-fx10-0x4a50d0x4a533-and-0x4a4b40x4a4c5">5.
+The bump gradient as a table of dword offsets (fx10, 0x4a50d..0x4a533
+and 0x4a4b4..0x4a4c5)</h2>
+<pre><code>4a4b4: mov eax,[esi]            ; 4 windows of the texture, each a dword (4 pixels)
+4a4b6: add eax,[ebx]
+4a4b8: add eax,[edx]
+4a4ba: add eax,[ebp+0]
+4a4bd: shr eax,2
+4a4c0: and eax,0x3f3f3f3f       ; average of 4 moving crops, 4 pixels at a time
+...
+4a50d: mov al,[esi+0x280]       ; HB[i+640]  (HB rows are 160 bytes: 4 rows down)
+4a513: sub al,[esi-0x280]       ; dy
+4a519: movsx eax,al
+4a51c: mov bl,[esi+4]
+4a51f: sub bl,[esi-4]           ; dx
+4a522: movsx ebx,bl
+4a525: neg eax / neg ebx
+4a529: lea eax,[eax+eax*4]      ; x5
+4a52c: shl eax,6                ; x64  =&gt; x320
+4a52f: add eax,ebx
+4a531: mov [edi],eax            ; offset into the second texture</code></pre>
+<p><code>5 * 64 = 320</code>, one scanline of the second picture,
+obtained with <code>lea</code>+<code>shl</code> instead of
+<code>imul</code>: <strong>the gradient is already a memory
+offset</strong> (-dy*320 - dx), so the final pass only does
+<code>OR texture[s + G]</code>. Heights are 0..15 (chunks 19/20 have 16
+colours), so the byte sums are safe from carries exactly as in snippet
+3. The final blit (0x4a56b) writes two pixels of a 2x2 block per
+iteration and reuses the low nibble:</p>
+<pre><code>4a596: mov al,[edx]             ; HB (height)
+4a598: or  al,[esi+ebp]         ; | chunk20[s+G]  (pre-shifted &lt;&lt;4 at 0x4a74d: lods / shl al,4 / stos)
+4a59e: mov [edi],al
+4a5a0: and al,0x0f              ; keep the height nibble only
+4a5a2: or  al,[esi+ebp+0x141]   ; | the other texel (+321: next row, next pixel)
+4a5ac: mov [edi+0x141],al       ; second pixel of the block</code></pre>
+<p>Two alternating routines (<code>0x4a56b</code> writes +0x141,
+<code>0x4a5cb</code> writes +0x13f) fill one diagonal per frame; the
+choice flips with <code>[0x6bcbd]</code> (0x4a53a..0x4a565): half the
+pixel work per frame, the other half comes from the previous frame.</p>
+<h2
+id="5b-fx11---the-whole-transparency-test-is-a-compare-and-a-skip-0x47e31">5b.
+fx11 - the whole transparency test is a compare and a skip
+(0x47e31)</h2>
+<pre><code>47e31: mov al,[ebp+0]           ; text strip pixel
+47e34: cmp al,0
+47e36: jne 0x47e3e
+47e3c: mov al,[esi]             ; else the picture pixel
+47e3e: mov [edi],al</code></pre>
+<p>The scroll is only the start of <code>ebp</code>:
+<code>(n&gt;&gt;1)*320</code> (0x47e21..0x47e29:
+<code>sar ebx,1 / imul ebx,ebx,0x140</code>), <code>n</code> incremented
+by the ISR (<code>inc [0x5f498]</code> at 0x47e72).</p>
+<h2
+id="6-the-screen-as-the-state-vram-read-back-through-a-16-bit-table-fx9-0x49fce0x4a0a0">6.
+The screen as the state: VRAM read-back through a 16-bit table (fx9,
+0x49fce..0x4a0a0)</h2>
+<pre><code>49fcc: mov ah,[0x6103e] / mov al,2 / out dx,ax   ; 0x3c4: map mask (write planes)
+49fdc: mov ah,[0x6103c] / mov al,4 / out 0x3ce   ; GC index 4: READ MAP SELECT
+4a025: xor ah,ah
+4a027: mov al,[ebp+0]           ; random byte -&gt; offset index
+4a02a: mov edx,[eax*4+0x6527e]  ; one of {0,+-3,+-480}
+4a031: mov al,[esi+edx]         ; image pixel, shifted by that offset
+4a034: mov ah,[ecx]             ; ah = what is on screen NOW (VRAM read)
+4a036: mov [ebx],al             ; the shifted image (next frame&#39;s source)
+4a038: mov al,[eax+0x61072]     ; new = TAB[ah:al]  (VRAM, image)
+4a03e: mov [edi],al             ; written back to the same address
+4a04a: sub ah,0x40 ... add al,0x40   ; second scanline of the triplet: bank 1
+4a065: sub ah,0x80 ... add al,0x80   ; third: bank 2</code></pre>
+<p>The effect needs <code>new = B[old] + A[img]</code> per colour
+channel; the code replaces the arithmetic with <strong>one 64 KB table
+whose index is <code>ah:al</code></strong>, where <code>ah</code> is
+read straight <strong>from video memory</strong> (GC register 4 selects
+the plane; two passes read planes 0 and 3 with different masks,
+0x3ce/0x3c4 are set at 0x49fdc and 0x4a0a1). The three scanlines of one
+RGB pixel live in three palette banks (0, 0x40, 0x80);
+subtracting/adding the bank base around the lookup lets all three share
+one table. Each loop iteration handles three scanlines, so the static is
+a <strong>temporal low pass of the framebuffer</strong> with no frame
+buffer in RAM. The random generator (0x4a2d9..0x4a2f8) is 8 instructions
+per dword:</p>
+<pre><code>4a2ea: stos [edi],eax           ; output the state
+4a2eb: add eax,ebx / add ebx,edx
+4a2ef: rol edx,2 / rol ebx,1
+4a2f4: xor eax,edx / xor edx,eax
+4a2f8: loop 0x4a2ea             ; ecx = 0x12c0 = 4800 dwords = 19200 bytes</code></pre>
+<p><code>stos</code> + <code>loop</code> with the three state words in
+<code>eax,ebx,edx</code> and no memory traffic. Port:
+<code>step()</code> in <code>web/fx/fx09.js</code> (checked on 99 oracle
+dumps, 0 unexplained).</p>
+<h2
+id="7-8x8-bilinear-patches-drawn-with-vga-plane-masks-fx3-0x48e0e-fx0-0x4679a">7.
+8x8 bilinear patches drawn with VGA plane masks (fx3 0x48e0e, fx0
+0x4679a)</h2>
+<pre><code>48e0e: movzx eax,[0x5d28e]      ; corner C (bottom-left)
+48e15: movzx ebx,[0x5d28c]      ; corner A (top-left)
+48e1c: sub eax,ebx / shl eax,6  ; (C-A)&lt;&lt;6 : step per 2 rows, 8.8 fixed point
+48e21: shl ebx,8                ; A&lt;&lt;8
+  ...                           ; same for the right column (B, D)
+48e3f: add ebx,0x8000 / add edx,0x8000   ; +0.5 rounding
+48e50: mov [esi],bh             ; left  edge value of row pair i
+48e52: mov [esi+1],dh           ; right edge value
+48e55: add ebx,eax / add edx,ebp
+...
+48e64: out dx,ax  (0x3c4, ax=0x0502)     ; map mask 5 = planes 0 and 2
+48e83: mov cl,bh / add ebx,eax / mov ch,bh / add ebx,eax
+48e8b: mov [edi],cx             ; WORD store: pixels (x, x+2) get cl, (x+4, x+6) get ch
+48e8e: mov [edi+0x51],cx        ; next row, shifted one byte: quincunx
+...
+48ea5: ... ax=0x0a02             ; map mask 0xa = planes 1 and 3, edi += 0xf0 (3 rows lower)</code></pre>
+<p>The byte of the 8.8 accumulator is read with <code>mov cl,bh</code>,
+<strong>no shift</strong>. With map mask 5 a byte store writes two
+planes at once, so a word store of <code>cx</code> colours <strong>4
+pixels (two at each of two x positions)</strong>; the second pass with
+mask 0xa fills the odd pixels, shifted down 3 rows with a different
+phase of the ramp (<code>shl eax,1</code> between steps). The whole 8x8
+block is 4+4 word stores x 2, <strong>16 stores for 64 pixels</strong>,
+and the x interpolation is done by the ramp value rather than per pixel.
+fx0's version (0x4679a) is the same patch, with the pass over planes 0/2
+then 1/3 written as in <code>cell()</code>
+(<code>web/fx/fx00.js</code>). Port: <code>cell()</code> in
+<code>swirl.js</code>, plane arrays <code>V[p*65536+a]</code>.</p>
+<h2
+id="8-a-3-instruction-hash-as-the-noise-generator-and-a-crossfade-by-imulsar-11-fx0-0x466200x4668f">8.
+A 3-instruction hash as the noise generator, and a crossfade by
+<code>imul</code>/<code>sar 11</code> (fx0, 0x46620..0x4668f)</h2>
+<pre><code>46620: mov bl,al / and bl,0x3f           ; noise value = 6 bits of the state
+46628: movzx edx,[edi]                   ; old buffer value
+4662b: lea edx,[edx+edx*2]               ; *3
+4662e: add ebx,edx / shr ebx,2           ; (new + 3*old) / 4   : temporal smoothing
+46633: mov [edi],bl
+46636: add eax,0x9d
+4663b: rol eax,0xb
+4663e: xor eax,0x9d                      ; next state: 3 instructions
+...
+4667f: imul eax,[0x4db68]                ; picture * w1
+46686: imul ebx,[0x4db64]                ; noise   * w2    (w1 + w2 = 0x800)
+4668d: add eax,ebx / sar eax,0xb         ; crossfade, then clamp to 0x3f (cmp / jle / mov eax,0x3f)</code></pre>
+<p><code>add / rol / xor</code> with constant 0x9d is the whole PRNG;
+the smoothing reuses the <code>lea x*3</code> trick. The crossfade
+weights always sum to 0x800 (the ISR does <code>b64--, b68++</code>,
+0x46603 gates on <code>b64 != 0</code>), so <code>sar 11</code> is the
+division: <strong>fades with no divide and no float</strong>.</p>
+<h2 id="9-separable-warp-one-add-per-pixel-fx0-0x45136-and-0x452ee">9.
+Separable warp: one add per pixel (fx0, 0x45136 and 0x452ee)</h2>
+<pre><code>45176: mov eax,0xffffff60               ; -160
+4517b: imul eax,edx                     ; -160 * (p+0x80)
+4517e: add eax,0xa00000                 ; + 160&lt;&lt;16  (screen centre)
+45183: add eax,[0x4dc4c]                ; + pan
+45189: add eax,0x10000
+ ...                                    ; loop 320x: ebx = eax&gt;&gt;16 clamped to [0,0x13f] -&gt; X[i], eax += p
+45302: mov ebx,[esi]                    ; Y[row] (already *320 + texture base)
+45304: mov ebp,[0x4dc00]                ; X table (stride 0x10: plane p, column group)
+4530a: mov edx,[ebp+0]                  ; X[x]
+4530d: add edx,ebx                      ; address = X[x] + Y[y]
+4530f: cmp byte [edx],0                 ; index 0 = transparent
+45312: je 0x4531c
+45318: mov al,[edx] / mov [edi],al
+4531c: mov edx,[ebp+0x10] ...           ; next plane&#39;s pixel, same row</code></pre>
+<p>The zoom/pan is a 16.16 linear ramp <code>i*p</code>, clamped,
+evaluated <strong>once per column and per row</strong> (320 + 200
+steps), not per pixel; both coordinates of the texture are folded into a
+single address by premultiplying the row table by 320. A 320x200
+rotozoom-free warp then costs a load, an add, a compare and a store per
+pixel. The X table is read at stride 0x10 (4 dwords) so that <strong>one
+pass per plane</strong> reads 80 columns. (An earlier note in
+<code>re/NOTES.md</code> about a 2-D pointer table with 0x500 stride was
+wrong: <code>add ebp,0x500</code> is dead code; corrected in session
+9.)</p>
+<h2
+id="10-vga-register-work-mode-x-vsync-dac-page-flip-helpers-0x49e9e0x49f43-0x4a317">10.
+VGA register work: mode X, vsync, DAC, page flip (helpers
+0x49e9e..0x49f43, 0x4a317)</h2>
+<pre><code>49ea2: mov dx,0x3da / in al,dx / test al,8 / je 49ea6        ; wait until the retrace bit is set...
+49eab: in al,dx / test al,8 / jne 49eab                      ; ...then until it is clear   (0x49ecc / 0x49ede: the two half-waits)
+49ef0: mov dx,cx / add cx,cx / add cx,dx                     ; count = 3 * colours
+49ef9: mov dx,0x3c8 / out dx,al / inc dx / cld / rep outsb   ; DAC: one instruction uploads the palette
+49f0c: mov ax,0x0604 / out 0x3c4,ax                          ; seq reg 4 = 6: chain-4 off (unchained / mode X)
+49f1a: mov ax,0x0014 / out 0x3d4,ax                          ; CRTC 0x14: dword mode off
+49f1c: mov ax,0xe317 / out dx,ax                             ; CRTC 0x17: byte mode on
+4a317: mov al,0xd / mov ah,bl / out 0x3d4,ax ; dec al / mov ah,bh / out 0x3d4,ax   ; CRTC 0xc/0xd: display start address
+4a376: mov eax,[0x61061] / xchg [0x61065],eax / mov [0x61061],eax        ; rotate page offsets</code></pre>
+<p>Notes: the vsync wait is done <strong>before</strong> the DAC upload
+(0x4a34d..0x4a359 then 0x4a35b..0x4a36f), so palette changes land in the
+retrace; <code>rep outsb</code> into 0x3c9 is the fastest DAC write on
+the 486 (Unicorn cannot hook it, 28 sites are patched in the harness,
+<code>re/rep_outsb.json</code>). Page flipping is two <code>out</code>s
+to CRTC 0xc/0xd with the page offset in <code>bl/bh</code>; the pages
+(0, 0x5355, 0xa6aa in fx0, 0, 0x7d00, 0x3e80 in fx1) rotate through
+<code>xchg</code> with memory. The effects write to
+<code>0xa0000+page</code> with the <strong>map mask</strong>
+(<code>0x3c4</code> index 2) instead of computing planes in
+software.</p>
+<h2
+id="11-palette-fades-as-an-integer-multiply-with-a-clamp-all-effects-fx6-0x4818e">11.
+Palette fades as an integer multiply with a clamp (all effects; fx6
+0x4818e)</h2>
+<pre><code>4816f: mov dword [0x5f48b],0x180        ; flash: fade = 1.5 on a row
+48179: mov edx,[0x5f48b]
+4818e: movzx eax,byte [esi]             ; 6-bit palette entry
+48191: imul eax,edx
+48194: sar eax,8                        ; * fade / 256
+48197: cmp eax,0x3f / jle ...           ; clamp
+481a0: mov eax,0x3f
+481a5: mov [edi],al
+481b9: sub dword [0x5f48b],0x10         ; decay 16 per vsync</code></pre>
+<p>The fade is 8.8 fixed point; values above 256 push colours past white
+(clamped at 63), which makes the flash look like over-exposure. The same
+pattern appears in fx10's palette (0x4a8a3: <code>imul</code> of two
+palette bytes, <code>imul</code> by the product scale,
+<code>shr 12</code>, <code>imul</code> by the fade, <code>sar 8</code>,
+clamp) and fx9's (0x4a33e). Port: <code>setPal()</code> in
+<code>web/fx/common.js</code>.</p>
+<h2
+id="12-the-clocks-a-pit-divisor-for-the-effects-a-fractional-sample-tick-for-the-music">12.
+The clocks: a PIT divisor for the effects, a fractional-sample tick for
+the music</h2>
+<pre><code>1be1f: mov eax,0x1234de                 ; 1193182
+1be29: idiv ebx                         ; / divisor passed in eax (0x4295 = 17045) -&gt; 70.0027 Hz   (called from 0x1c2de)
+1be2b: mov edx,0x36 ... out 0x43        ; counter 0, mode 3
+1be46..1be61: out 0x40 (low), out 0x40 (high)</code></pre>
+<pre><code>3dde9: mov cl,[0x44501]                 ; tempo
+3ddef: mov ax,[0x412ed]                 ; mixing rate (Hz)
+3ddf5: shl eax,8
+3ddf8: lea eax,[eax+eax*4]              ; * 5
+3ddfb: div ecx                          ; (rate&lt;&lt;8)*5 / tempo
+3ddfd: shr eax,1                        ; samples per tick, 8.8 fixed point
+3ddff: mov cl,al / shr eax,8
+3de04: add [0x2a582],cl                 ; fractional part accumulates...
+3de0a: adc ax,0                         ; ...and its carry adds one sample
+3de0e: mov [0x2a57e],eax                ; samples to mix this tick</code></pre>
+<p>A tick is <code>2.5/tempo</code> seconds to within 1/256 sample,
+<strong>without float</strong>: the low byte of the 8.8 number is
+accumulated with <code>add</code>/<code>adc</code>, so tempo changes
+(Txx) never drift. libopenmpt truncates samples per tick, so it runs up
+to 0.1375 s ahead at the end (<code>re/NOTES.md</code>, "Original player
+clock": checked equal to the model within 0.7 ms at all 2400 rows, rate
+independent). The effects do <strong>not</strong> use this clock: their
+ISRs run on the 70.0027 Hz PIT tick and pace on port 0x3da, which is why
+their pacing constants are machine dependent. The effect routines wait
+for the music with plain compares
+(<code>cmp word cs:[0x44505],0x25</code> at 0x47e50 = "until order
+37").</p>
+<h2 id="13-per-effect-isr-swap">13. Per-effect ISR swap</h2>
+<p>The master (<code>0x1c2c8..0x1c449</code>) calls the 13 routines in
+sequence, and <strong>before each call installs a new IRQ0
+handler</strong>
+(<code>mov ebx,0x1be94 ; mov eax,8 ; call 0x4adbb</code> at
+0x1c30b..0x1c317, then <code>call 0x4705f</code> for fx1; fx2 0x1bebc,
+fx4/8 0x1bee4, fx5 0x1bf0c, fx6 0x1bf34, fx10 0x1bf5c, fx11 0x1bf84).
+The wrapper <code>0x1be6a</code> saves everything (<code>pusha</code>,
+DS, ES, FS, GS) and calls the effect's tick, so an effect's whole
+animation state is <strong>a handful of counters in its ISR</strong>
+(<code>A += 0x20</code> etc.) and its main loop only renders from them.
+That is the property the port exploits: each ISR is ported literally
+(<code>isrStep</code>) and replayed from the entry to seek.</p>
+</body>
+</html>
